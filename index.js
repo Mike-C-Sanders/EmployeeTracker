@@ -56,6 +56,7 @@ const init =() =>{
                 break;
                 
             case 'Add Department':
+
                 break;
             
             case 'Add Role':
@@ -80,7 +81,7 @@ const init =() =>{
     })
 }
 
-//*FUNCTIONS for above cases
+//*VIEW FUNCTIONS
 //view all departments function
 const viewDepartments = () => {
     //find all departments
@@ -118,4 +119,33 @@ const viewEmployees = () =>{
         //return to the main inquirer prompt
         promptUser();
     })
+}
+
+//*ADD FUNCTIONS
+//add a new department function
+const addDepartment = () =>{
+    //array of questions to ask the user before inqurer prompt 
+    //TODO ADD VALIDATION 
+    const question = [
+        {
+            type: 'input',
+            name: 'newDept',
+            message: `What's the name of the new department?`
+        }
+    ];
+
+    //access inquirer for the prompt
+    inquirer.prompt(question).then((answer) => {
+        //create the new department based on the answer
+        Department.create({
+            name: answer.newDept,
+        }).then(()=>{
+            //log the result
+            console.log(`The ${answer.newDept} has been added to your organization.`);
+        }).then(() =>{
+            //return to the main screen
+            promptUser();
+        })
+    })
+
 }
