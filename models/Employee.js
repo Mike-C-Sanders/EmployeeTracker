@@ -48,6 +48,10 @@ Employee.init(
 
         },
     },
+    {
+        sequelize,
+        modelName: 'employee',
+    }
 );
 
 //export the employee model

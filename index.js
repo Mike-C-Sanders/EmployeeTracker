@@ -48,9 +48,11 @@ const init =() =>{
                 break;
             
             case 'View All Roles':
+                viewRoles();
                 break;
             
             case 'View All Employees':
+                viewEmployees();
                 break;
                 
             case 'Add Department':
@@ -79,7 +81,6 @@ const init =() =>{
 }
 
 //*FUNCTIONS for above cases
-
 //view all departments function
 const viewDepartments = () => {
     //find all departments
@@ -93,11 +94,12 @@ const viewDepartments = () => {
 }
 
 //vew all roles
-
 const viewRoles = () => {
     //find all roles 
-    Role.findAll().then((roles) => {
-        console.table(roles, ['id', 'title', 'salary', 'department']);
+    Role.findAll({
+        include: [{model: Department}],
+    }).then((roles) => {
+        console.table(roles, ['id', 'title', 'salary', 'Department.name']);
         
         //return to the main inquirer prompt
         promptUser();
@@ -107,9 +109,11 @@ const viewRoles = () => {
 //view all employees
 const viewEmployees = () =>{
     //find all employees 
-    Employee.findAll().then((employees) =>{
+    Employee.findAll({
+        include: [{model: Role}],
+    }).then((employees) =>{
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first name', 'last name', 'title', 'salary', 'department', 'manager']);
+        console.table(employees, ['id', 'first name', 'last name', 'Role.title', 'Role.salary', 'Role.department_id', 'manager']);
 
         //return to the main inquirer prompt
         promptUser();
