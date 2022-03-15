@@ -14,7 +14,7 @@ Role.init(
             autoIncrement: true,
         },
         //title of the role maximum of 30 characters
-        role: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
             validate:{

@@ -56,7 +56,7 @@ const init =() =>{
                 break;
                 
             case 'Add Department':
-
+                addDepartment();
                 break;
             
             case 'Add Role':
