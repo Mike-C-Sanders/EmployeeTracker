@@ -34,7 +34,6 @@ const promptUser = () =>{
 }
 
 //function to initialize app
-
 const init =() =>{
     //initiate the inquirer script
     promptUser()
@@ -60,6 +59,7 @@ const init =() =>{
                 break;
             
             case 'Add Role':
+                addRole();
                 break;
                 
             case 'Add Employee':
@@ -149,3 +149,58 @@ const addDepartment = () =>{
     })
 
 }
+
+const addRole = () =>{
+    // create a department array for the choices 
+    const deptArr = [];
+    
+    //finall departments before asking the user. We need to use the departments array for choices
+    const departments = await Department.findAll();
+
+    //loop through all departments and add them to deptArr array
+    departments.forEach(dept =>{
+        deptArr.push(dept.name);
+    })
+    
+    //questions to ask the user before adding to the database
+    const questions = [
+        {
+            type: 'input',
+            name: 'title',
+            message: `What new role would you like to add?`
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: `Set this new role's salary value. (Enter a number)`
+        },
+        {
+            type:'list',
+            name: 'department',
+            message: 'Select a department to assign this role.',
+            choices: deptArr,
+        }
+    ]
+
+    //using inquirer we prompt the user to answer a series of questions and create a new role
+    inquirer.prompt(questions).then((answers) =>{
+
+        //find the department id associated with the choice
+        const deptID = deptArr.indexOf(answers.department);
+
+        //create the role
+        Role.create({
+            title: answers.title, 
+            salary: answers.salary, 
+            department_id: deptID,
+        }).then(() =>{
+            console.log(`successfully created a new Role`);
+        }).then(() =>{
+            //back to the main menu
+            promptUser();
+        })
+    })
+}
+
+
+init();
