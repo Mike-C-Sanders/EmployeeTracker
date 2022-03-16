@@ -155,13 +155,16 @@ const addRole = () =>{
     const deptArr = [];
     
     //finall departments before asking the user. We need to use the departments array for choices
-    const departments = await Department.findAll();
-
-    //loop through all departments and add them to deptArr array
-    departments.forEach(dept =>{
-        deptArr.push(dept.name);
-    })
     
+    Department.findAll().then((departments) =>{
+
+        //loop through all departments and add them to deptArr array
+        departments.forEach(dept =>{
+            deptArr.push(dept.name);
+        })
+        
+    });
+
     //questions to ask the user before adding to the database
     const questions = [
         {
