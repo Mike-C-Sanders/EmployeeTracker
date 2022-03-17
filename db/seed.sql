@@ -7,7 +7,7 @@ VALUES
 (3,'Technology'),
 (4,'Administration');
 
-INSERT INTO roles(id,title,salary,department_id)
+INSERT INTO role(id,title,salary,department_id)
 VALUES
 (1,'HR',50000,1),
 (2,'Manager',55000,2),

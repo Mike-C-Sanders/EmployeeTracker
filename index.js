@@ -90,7 +90,7 @@ const viewDepartments = () => {
         console.table(departments, ['id', 'name']);
 
         //return to the main inquirer prompt
-        promptUser();
+        init();
     })
 }
 
@@ -103,7 +103,7 @@ const viewRoles = () => {
         console.table(roles, ['id', 'title', 'salary', 'Department.name']);
         
         //return to the main inquirer prompt
-        promptUser();
+        init();
     })
 }
 
@@ -117,7 +117,7 @@ const viewEmployees = () =>{
         console.table(employees, ['id', 'first name', 'last name', 'Role.title', 'Role.salary', 'Role.department_id', 'manager']);
 
         //return to the main inquirer prompt
-        promptUser();
+        init();
     })
 }
 
@@ -144,12 +144,13 @@ const addDepartment = () =>{
             console.log(`The ${answer.newDept} has been added to your organization.`);
         }).then(() =>{
             //return to the main screen
-            promptUser();
+            init();
         })
     })
 
 }
 
+//add role function to add in a new role
 const addRole = () =>{
     // create a department array for the choices 
     const deptArr = [];
@@ -200,10 +201,10 @@ const addRole = () =>{
             console.log(`successfully created a new Role`);
         }).then(() =>{
             //back to the main menu
-            promptUser();
+            init();
         })
     })
 }
 
-
+//start the program with main initialize file
 init();
