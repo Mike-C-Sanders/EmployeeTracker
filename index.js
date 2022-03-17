@@ -99,6 +99,7 @@ const viewRoles = () => {
     //find all roles 
     Role.findAll({
         include: [{model: Department}],
+        raw: true,
     }).then((roles) => {
         console.table(roles, ['id', 'title', 'salary', 'Department.name']);
         
@@ -112,9 +113,10 @@ const viewEmployees = () =>{
     //find all employees 
     Employee.findAll({
         include: [{model: Role}],
+        raw:true,
     }).then((employees) =>{
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first name', 'last name', 'Role.title', 'Role.salary', 'Role.department_id', 'manager']);
+        console.table(employees, ['id', 'first name', 'last name', 'Role.title', 'Role.salary', 'Role.department_id', 'manager_id']);
 
         //return to the main inquirer prompt
         init();
