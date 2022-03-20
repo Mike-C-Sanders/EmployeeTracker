@@ -6,11 +6,7 @@ const {Department, Employee, Role} = require('./models/index');
 const db = require('./config/connection');
 
 //imported questions for the inquirer
-const {startQuest, addDepartmentQuestions,addRoleQuestions} = require('./app/questions')
-
-//questions array that's going to be use to kickoff the prompting of inquirer
-//based on the choice in the list will prompt a function
-
+const {startQuest, addDepartmentQuestions,addRoleQuestions, addEmployeeQuestions} = require('./app/questions')
 
 //function used to prompt the user to provide response to above list
 const promptUser = () =>{
@@ -85,6 +81,7 @@ const viewRoles = () => {
     Role.findAll({
         include: [{model: Department}],
         raw: true,
+        require: false,
     }).then((roles) => {
         console.table(roles, ['id', 'title', 'salary', 'Department.name']);
         
@@ -101,7 +98,7 @@ const viewEmployees = () =>{
         raw:true,
     }).then((employees) =>{
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first name', 'last name', 'Role.title', 'Role.salary', 'Role.department_id', 'manager_id']);
+        console.table(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
 
         //return to the main inquirer prompt
         init();
@@ -145,7 +142,7 @@ const addRole = () =>{
         
     });
     //using inquirer we prompt the user to answer a series of questions and create a new role
-    inquirer.prompt(addRoleQuestions).then((answers) =>{
+    inquirer.prompt(addRoleQuestions(deptArr)).then((answers) =>{
 
         //find the department id associated with the choice
         const deptID = deptArr.indexOf(answers.department);
@@ -162,6 +159,34 @@ const addRole = () =>{
             init();
         })
     })
+}
+
+//Add a new employee
+const addEmployee = () =>{
+    const roleArr = [];
+    const managerArr = [];
+
+    //find all roles and push the titles into an array for the use during inquirer
+    Role.findAll().then((roles) =>{
+        roles.forEach(role =>{
+            roleArr.push(role.title)
+        })
+    });
+
+    //inquirer prompt initated using the employeequesitons which adds the role array and manager array for choices quesitons 
+    inquirer.prompt(addEmployeeQuestions(roleArr, managerArr)).then((answers) =>{
+        //determine which role and which manager was chosen
+        const roleID = roleArr.indexOf(answers.role);
+        const managerID = managerArr.indexOf(answers.manager);
+
+        Employee.create({
+            first_name: answers.first_name,
+            last_name: answers.last_name,
+            role_id: roleID,
+            manager_id: managerID,
+        })
+    })
+
 }
 
 //start the program with main initialize file

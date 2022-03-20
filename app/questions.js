@@ -1,5 +1,7 @@
 //Questions variables for all 
 
+//questions array that's going to be use to kickoff the prompting of inquirer
+//based on the choice in the list will prompt a function
 const startQuest = [
     {
         type:'list',
@@ -32,7 +34,8 @@ const addDepartmentQuestions = [
     ];
 
 //questions to ask the user before adding to the database
-const addRoleQuestions = [
+const addRoleQuestions = (deptArr) =>{
+    return [
     {
         type: 'input',
         name: 'title',
@@ -49,6 +52,32 @@ const addRoleQuestions = [
         message: 'Select a department to assign this role.',
         choices: deptArr,
     }
-]
+]}
 
-module.exports = {startQuest, addDepartmentQuestions, addRoleQuestions};
+const addEmployeeQuestions = (roleArr, managerArr) =>{
+    return[
+        {
+            type: 'input',
+            name: 'first_name',
+            message: `What's the first name of the employee?`
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: `What's the last name of the employee?`,
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: `Choose the role this employee is aligned to.`,
+            choices: roleArr,
+        },
+        {
+            type: 'list',
+            name: 'manager',
+            message: `Choose a manager`,
+            choices: managerArr,
+        }
+    ]
+}
+module.exports = {startQuest, addDepartmentQuestions, addRoleQuestions, addEmployeeQuestions};
