@@ -98,9 +98,27 @@ const updateManagerQuestions = (employeeArr) =>{
     ]
 
 }
+
+const updateEmployeeQuestions = (employeeArr, roleArr) =>{
+    return [
+        {
+            type: 'list',
+            name: 'employee',
+            message: `Which employee has a new role?`,
+            choices: employeeArr,
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: `What's the employee's new role?`,
+            choices: roleArr,
+        }
+    ]
+}
 module.exports = {
     startQuest, 
     addDepartmentQuestions, 
     addRoleQuestions, 
     addEmployeeQuestions, 
-    updateManagerQuestions};
+    updateManagerQuestions,
+    updateEmployeeQuestions};

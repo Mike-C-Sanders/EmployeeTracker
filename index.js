@@ -10,7 +10,8 @@ const {startQuest,
     addDepartmentQuestions,
     addRoleQuestions, 
     addEmployeeQuestions, 
-    updateManagerQuestions} = require('./util/questions')
+    updateManagerQuestions,
+    updateEmployeeQuestions} = require('./util/questions')
 
 //function used to prompt the user to provide response to above list
 const promptUser = () =>{
@@ -137,7 +138,7 @@ const addRole = () =>{
     // create a department array for the choices 
     const deptArr = [];
     
-    //finall departments before asking the user. We need to use the departments array for choices
+    //find all departments before asking the user. We need to use the departments array for choices
     
     Department.findAll().then((departments) =>{
         console.log(departments);
@@ -267,8 +268,43 @@ const updateManager = () =>{
 }
 
 //update Employee data function
-const updateEmployee = () =>{
+const updateEmployeeRole = () =>{
+    //initialize the employee array
+    const employeeArr = [];
+    //role array 
+    const roleArr = [];
 
+    //find all employees
+    Employee.findAll().then(employees=>{
+        employees.forEach(employee => {
+            employeeArr.push(employee.first_name + ' ' + employee.last_name);
+        })
+    });
+
+    Role.findAll().then(roles =>{
+        roles.forEach(role => {
+            roleArr.push(role.title);
+        })
+    })
+    inquirer.prompt(updateEmployeeQuestions(employeeArr, roleArr)).then((answers) =>{
+        //role ID and employee ID used for the update
+        const roleID = roleArr.indexOf(answers.role) +1;
+        const employeeID = employeeArr.indexOf(answers.employee) +1;
+
+        Employee.update({
+            role_id: roleID,
+        }, {
+            where: {
+                id: employeeID,
+            },
+        }).then(() => {
+            console.log(`Employee ${answers.employee} role updated successfully`);
+            //return to the main menu
+            init();
+        })
+    })
+
+    
 
 }
 
