@@ -6,7 +6,11 @@ const {Department, Employee, Role} = require('./models/index');
 const db = require('./config/connection');
 
 //imported questions for the inquirer
-const {startQuest, addDepartmentQuestions,addRoleQuestions, addEmployeeQuestions} = require('./app/questions')
+const {startQuest, 
+    addDepartmentQuestions,
+    addRoleQuestions, 
+    addEmployeeQuestions, 
+    updateManagerQuestions} = require('./util/questions')
 
 //function used to prompt the user to provide response to above list
 const promptUser = () =>{
@@ -48,6 +52,7 @@ const init =() =>{
                 break;
 
             case 'Update Employee Manager':
+                updateManager();
                 break;
 
             case 'Update Employee Role':
@@ -193,6 +198,7 @@ const addEmployee = () =>{
         const roleID = roleArr.indexOf(answers.role) + 1;
         let managerID;
 
+        //loop through all manager values and then match the index of selected answer
         managerArr.forEach((manager, index ) =>{
             //find the manager called in answers
             if(manager === answers.manager){
@@ -217,5 +223,58 @@ const addEmployee = () =>{
 
 }
 
+//update manager function
+const updateManager = () =>{
+    const employeeArr = [];
+    //used to store the employee id for final addition
+    const employeeIDS = [];
+
+    Employee.findAll().then(employees=>{
+        employees.forEach(employee => {
+            employeeIDS.push(employee.id);
+            employeeArr.push(employee.first_name + ' ' + employee.last_name);
+        })
+    })
+
+    console.log(employeeArr);
+    inquirer.prompt(updateManagerQuestions(employeeArr)).then((answers) =>{
+        //if employee was selected as their own manager go back to the main menu
+        if(answers.employee === answers.manager){
+            console.log('Employee cannot be their own manager');
+            init();
+        }
+        else{
+            //assign the employee id to the employee selected
+            const employeeID = employeeArr.indexOf(answers.employee) +1;
+    
+            //set the manager selected to the manager id
+            const managerID = employeeArr.indexOf(answers.manager)+1;
+            
+            Employee.update({
+                manager_id: managerID,
+            }, {
+                where: {
+                    id: employeeID,
+                }
+            }).then(() => {
+                console.log(`Employee ${answers.employee} manager updated successfully`);
+                //return to the main menu
+                init();
+            })
+            
+        }
+    })
+}
+
+//update Employee data function
+const updateEmployee = () =>{
+
+
+}
+
+//delete Employee
+const deleteEmployee = () =>{
+
+}
 //start the program with main initialize file
 init();
