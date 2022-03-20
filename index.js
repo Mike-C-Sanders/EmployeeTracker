@@ -81,9 +81,8 @@ const viewRoles = () => {
     Role.findAll({
         include: [{model: Department}],
         raw: true,
-        require: false,
     }).then((roles) => {
-        console.table(roles, ['id', 'title', 'salary', 'Department.name']);
+        console.table(roles, ['id', 'title', 'salary', 'department_id','Department.name']);
         
         //return to the main inquirer prompt
         init();
@@ -97,8 +96,9 @@ const viewEmployees = () =>{
         include: [{model: Role}],
         raw:true,
     }).then((employees) =>{
+        console.log(employees);
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
+        console.table(employees, ['id', 'first_name', 'last_name', 'Role.title', 'manager_id']);
 
         //return to the main inquirer prompt
         init();
@@ -134,7 +134,7 @@ const addRole = () =>{
     //finall departments before asking the user. We need to use the departments array for choices
     
     Department.findAll().then((departments) =>{
-
+        console.log(departments);
         //loop through all departments and add them to deptArr array
         departments.forEach(dept =>{
             deptArr.push(dept.name);
@@ -164,7 +164,10 @@ const addRole = () =>{
 //Add a new employee
 const addEmployee = () =>{
     const roleArr = [];
+    //store manager name for the inquirer
     const managerArr = [];
+    //used to store the employee id for final addition
+    const employeeIDS = []
 
     //find all roles and push the titles into an array for the use during inquirer
     Role.findAll().then((roles) =>{
@@ -173,18 +176,42 @@ const addEmployee = () =>{
         })
     });
 
+    Employee.findAll().then((employees) =>{
+        //check the employee role to make sure the person is a manager
+        employees.forEach(employee =>{
+            if(employee.role === 'manager'){
+                employeeIDS.push(employee.id);
+                managerArr.push(employee.first_name +''+employee.last_name);
+            }
+        })
+    })
+
     //inquirer prompt initated using the employeequesitons which adds the role array and manager array for choices quesitons 
     inquirer.prompt(addEmployeeQuestions(roleArr, managerArr)).then((answers) =>{
         //determine which role and which manager was chosen
         const roleID = roleArr.indexOf(answers.role);
-        const managerID = managerArr.indexOf(answers.manager);
+        let managerID;
+
+        managerArr.forEach(index, manager =>{
+            //find the manager called in answers
+            if(manager === answers.manager){
+                //match the manager's employee id and assign the value to managerID being added
+                managerID = employeeIDS[index];
+            }
+        });
+
+        
 
         Employee.create({
             first_name: answers.first_name,
             last_name: answers.last_name,
             role_id: roleID,
             manager_id: managerID,
-        })
+        }).then(() =>{
+            console.log('A new employee was successfully added');
+
+            init();
+        });
     })
 
 }
