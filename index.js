@@ -92,7 +92,7 @@ const viewRoles = () => {
         include: [{model: Department}],
         raw: true,
     }).then((roles) => {
-        console.table(roles, ['id', 'title', 'salary', 'department_id','Department.name']);
+        console.table(roles, ['id', 'title', 'salary', 'department_id']);
         
         //return to the main inquirer prompt
         init();
@@ -106,7 +106,6 @@ const viewEmployees = () =>{
         include: [{model: Role}],
         raw:true,
     }).then((employees) =>{
-        console.log(employees);
         //find all employees, returning a full table of all employees
         console.table(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
 
@@ -144,7 +143,6 @@ const addRole = () =>{
     //find all departments before asking the user. We need to use the departments array for choices
     
     Department.findAll().then((departments) =>{
-        console.log(departments);
         //loop through all departments and add them to deptArr array
         departments.forEach(dept =>{
             deptArr.push(dept.name);
@@ -163,7 +161,7 @@ const addRole = () =>{
             salary: answers.salary, 
             department_id: deptID,
         }).then(() =>{
-            console.log(`successfully created a new Role`);
+            console.log(`Successfully created a new Role`);
         }).then(() =>{
             //back to the main menu
             init();
@@ -233,7 +231,7 @@ const updateManager = () =>{
     //used to store the employee id for final addition
     const employeeIDS = [];
 
-    Employee.findAll().then(employees=>{
+    Employee.findAll().then((employees)=>{
         employees.forEach(employee => {
             employeeIDS.push(employee.id);
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
@@ -278,13 +276,13 @@ const updateEmployeeRole = () =>{
     const roleArr = [];
 
     //find all employees
-    Employee.findAll().then(employees=>{
+    Employee.findAll().then((employees)=>{
         employees.forEach(employee => {
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
         })
     });
 
-    Role.findAll().then(roles =>{
+    Role.findAll().then((roles) =>{
         roles.forEach(role => {
             roleArr.push(role.title);
         })
@@ -317,7 +315,7 @@ const deleteEmployee = () =>{
     const employeeArr = [];
 
     //find all employees
-    Employee.findAll().then(employees=>{
+    Employee.findAll().then((employees)=>{
         employees.forEach(employee => {
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
         })

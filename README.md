@@ -5,7 +5,7 @@
 A Nodejs and Inquirer command line application used to manage a company's employee database, using NodeJs, Inquirer, Sequelize and MySQL. This application allows for a user to view Departments, Roles, and Employee information. In addtion, you will be able to update, delete and create new Employees/Departments and Roles.
 
 The motivation for this project was: 
-- Create an easy way to manage an employee database within the command prompt
+- Create an easy way to manage an employee database within the command prompt 
 - Quick and easy way to organize and plan your business.
 
 ## Table of Contents
