@@ -44,6 +44,7 @@ const init =() =>{
                 break;
                 
             case 'Add Employee':
+                addEmployee();
                 break;
 
             case 'Update Employee Manager':
@@ -98,7 +99,7 @@ const viewEmployees = () =>{
     }).then((employees) =>{
         console.log(employees);
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first_name', 'last_name', 'Role.title', 'manager_id']);
+        console.table(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
 
         //return to the main inquirer prompt
         init();
@@ -145,7 +146,7 @@ const addRole = () =>{
     inquirer.prompt(addRoleQuestions(deptArr)).then((answers) =>{
 
         //find the department id associated with the choice
-        const deptID = deptArr.indexOf(answers.department);
+        const deptID = deptArr.indexOf(answers.department)+1;
 
         //create the role
         Role.create({
@@ -179,20 +180,20 @@ const addEmployee = () =>{
     Employee.findAll().then((employees) =>{
         //check the employee role to make sure the person is a manager
         employees.forEach(employee =>{
-            if(employee.role === 'manager'){
-                employeeIDS.push(employee.id);
-                managerArr.push(employee.first_name +''+employee.last_name);
-            }
+            
+            employeeIDS.push(employee.id);
+            managerArr.push(employee.first_name +' '+employee.last_name);
+            
         })
     })
 
     //inquirer prompt initated using the employeequesitons which adds the role array and manager array for choices quesitons 
     inquirer.prompt(addEmployeeQuestions(roleArr, managerArr)).then((answers) =>{
         //determine which role and which manager was chosen
-        const roleID = roleArr.indexOf(answers.role);
+        const roleID = roleArr.indexOf(answers.role) + 1;
         let managerID;
 
-        managerArr.forEach(index, manager =>{
+        managerArr.forEach((manager, index ) =>{
             //find the manager called in answers
             if(manager === answers.manager){
                 //match the manager's employee id and assign the value to managerID being added
