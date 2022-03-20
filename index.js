@@ -4,28 +4,13 @@ const inquirer = require('inquirer');
 //local files called
 const {Department, Employee, Role} = require('./models/index');
 const db = require('./config/connection');
+
+//imported questions for the inquirer
+const {startQuest, addDepartmentQuestions,addRoleQuestions} = require('./app/questions')
+
 //questions array that's going to be use to kickoff the prompting of inquirer
 //based on the choice in the list will prompt a function
-const startQuest = [
-    {
-        type:'list',
-        name: 'mainOptions',
-        message: `What would you like to do?\n`,
-        choices: [
-            'View All Departments', 
-            'View All Roles',
-            'View All Employees', 
-            'Add Department', 
-            'Add Role', 
-            'Add Employee',
-            'Update Employee Manager',
-            'Update Employee Role', 
-            'Delete Employee',
-            'Quit'
-        ],
-    },
 
-]
 
 //function used to prompt the user to provide response to above list
 const promptUser = () =>{
@@ -126,18 +111,10 @@ const viewEmployees = () =>{
 //*ADD FUNCTIONS
 //add a new department function
 const addDepartment = () =>{
-    //array of questions to ask the user before inqurer prompt 
-    //TODO ADD VALIDATION 
-    const question = [
-        {
-            type: 'input',
-            name: 'newDept',
-            message: `What's the name of the new department?`
-        }
-    ];
+    
 
     //access inquirer for the prompt
-    inquirer.prompt(question).then((answer) => {
+    inquirer.prompt(addDepartmentQuestions).then((answer) => {
         //create the new department based on the answer
         Department.create({
             name: answer.newDept,
@@ -167,29 +144,8 @@ const addRole = () =>{
         })
         
     });
-
-    //questions to ask the user before adding to the database
-    const questions = [
-        {
-            type: 'input',
-            name: 'title',
-            message: `What new role would you like to add?`
-        },
-        {
-            type: 'input',
-            name: 'salary',
-            message: `Set this new role's salary value. (Enter a number)`
-        },
-        {
-            type:'list',
-            name: 'department',
-            message: 'Select a department to assign this role.',
-            choices: deptArr,
-        }
-    ]
-
     //using inquirer we prompt the user to answer a series of questions and create a new role
-    inquirer.prompt(questions).then((answers) =>{
+    inquirer.prompt(addRoleQuestions).then((answers) =>{
 
         //find the department id associated with the choice
         const deptID = deptArr.indexOf(answers.department);
