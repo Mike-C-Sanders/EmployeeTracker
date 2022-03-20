@@ -115,10 +115,22 @@ const updateEmployeeQuestions = (employeeArr, roleArr) =>{
         }
     ]
 }
+
+const deleteEmployeeQuestions = (employeeArr) =>{
+    return [
+        {
+            type: 'list',
+            name: 'employee',
+            message: `Which employee would you like to delete?`,
+            choices: employeeArr,
+        }
+    ]
+}
 module.exports = {
     startQuest, 
     addDepartmentQuestions, 
     addRoleQuestions, 
     addEmployeeQuestions, 
     updateManagerQuestions,
-    updateEmployeeQuestions};
+    updateEmployeeQuestions,
+    deleteEmployeeQuestions};

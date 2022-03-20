@@ -11,7 +11,8 @@ const {startQuest,
     addRoleQuestions, 
     addEmployeeQuestions, 
     updateManagerQuestions,
-    updateEmployeeQuestions} = require('./util/questions')
+    updateEmployeeQuestions,
+    deleteEmployeeQuestions} = require('./util/questions')
 
 //function used to prompt the user to provide response to above list
 const promptUser = () =>{
@@ -57,9 +58,11 @@ const init =() =>{
                 break;
 
             case 'Update Employee Role':
+                updateEmployeeRole();
                 break;
                 
             case 'Delete Employee':
+                deleteEmployee();
                 break;
 
             case 'Quit':
@@ -310,6 +313,27 @@ const updateEmployeeRole = () =>{
 
 //delete Employee
 const deleteEmployee = () =>{
+    //initialize the employee array
+    const employeeArr = [];
+
+    //find all employees
+    Employee.findAll().then(employees=>{
+        employees.forEach(employee => {
+            employeeArr.push(employee.first_name + ' ' + employee.last_name);
+        })
+    });
+
+    inquirer.prompt(deleteEmployeeQuestions(employeeArr)).then((answers) =>{
+        const employeeID = employeeArr.indexOf(answers.employee);
+        Employee.destroy({
+            where: {
+                id: employeeID,
+            }
+        }).then(() =>{
+            console.log(`${answers.employee} has successfully been removed from the organization.`);
+            init();
+        })
+    })
 
 }
 //start the program with main initialize file
