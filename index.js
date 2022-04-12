@@ -103,11 +103,12 @@ const viewRoles = () => {
 const viewEmployees = () =>{
     //find all employees 
     Employee.findAll({
-        include: [{model: Role}],
+        include: [{model: Role, Department}],
         raw:true,
     }).then((employees) =>{
+        console.log(employees);
         //find all employees, returning a full table of all employees
-        console.table(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
+        console.table(employees, ['id', 'first_name', 'last_name', 'role.title', 'role.salary', 'role.department_id', 'manager_id']);
 
         //return to the main inquirer prompt
         init();
