@@ -1,9 +1,9 @@
 //Node Modules included 
 const inquirer = require('inquirer');
-
 //local files called
 const {Department, Employee, Role} = require('./models/index');
 const db = require('./config/connection');
+
 
 //imported questions for the inquirer
 const {startQuest, 
@@ -92,7 +92,7 @@ const viewRoles = () => {
         include: [{model: Department}],
         raw: true,
     }).then((roles) => {
-        console.table(roles, ['id', 'title', 'salary', 'department_id']);
+        console.table(roles, ['id', 'title', 'salary', 'department.name']);
         
         //return to the main inquirer prompt
         init();
@@ -236,9 +236,8 @@ const updateManager = () =>{
             employeeIDS.push(employee.id);
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
         })
-    })
+    });
 
-    console.log(employeeArr);
     inquirer.prompt(updateManagerQuestions(employeeArr)).then((answers) =>{
         //if employee was selected as their own manager go back to the main menu
         if(answers.employee === answers.manager){
@@ -334,5 +333,7 @@ const deleteEmployee = () =>{
     })
 
 }
-//start the program with main initialize file
-init();
+db.sync({force: false}).then(() =>{
+    //start the program with main initialize file
+    init();
+});

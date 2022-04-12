@@ -25,8 +25,15 @@ Role.belongsTo(Department, {
     foreignKey: 'department_id'
 });
 
+Department.hasMany(Role, {
+    foreignKey: 'department_id',
+})
 //employee belongs to one role
 Employee.belongsTo(Role, {
+    foreignKey: 'role_id',
+})
+
+Role.hasMany(Employee, {
     foreignKey: 'role_id',
 })
 
@@ -36,5 +43,8 @@ Employee.belongsTo(Employee, {
     foreignKey: 'manager_id'
 });
 
+Employee.hasMany(Employee, {
+    foreignKey: 'manager_id',
+})
 //export all models
 module.exports = {Department, Role, Employee};
