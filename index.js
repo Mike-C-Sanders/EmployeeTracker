@@ -237,35 +237,35 @@ const updateManager = () =>{
             employeeIDS.push(employee.id);
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
         })
-    });
-
-    inquirer.prompt(updateManagerQuestions(employeeArr)).then((answers) =>{
-        //if employee was selected as their own manager go back to the main menu
-        if(answers.employee === answers.manager){
-            console.log('Employee cannot be their own manager');
-            init();
-        }
-        else{
-            //assign the employee id to the employee selected
-            const employeeID = employeeArr.indexOf(answers.employee) +1;
-    
-            //set the manager selected to the manager id
-            const managerID = employeeArr.indexOf(answers.manager)+1;
-            
-            Employee.update({
-                manager_id: managerID,
-            }, {
-                where: {
-                    id: employeeID,
-                }
-            }).then(() => {
-                console.log(`Employee ${answers.employee} manager updated successfully`);
-                //return to the main menu
+        
+        inquirer.prompt(updateManagerQuestions(employeeArr)).then((answers) =>{
+            //if employee was selected as their own manager go back to the main menu
+            if(answers.employee === answers.manager){
+                console.log('Employee cannot be their own manager');
                 init();
-            })
-            
-        }
-    })
+            }
+            else{
+                //assign the employee id to the employee selected
+                const employeeID = employeeArr.indexOf(answers.employee) +1;
+                
+                //set the manager selected to the manager id
+                const managerID = employeeArr.indexOf(answers.manager)+1;
+                
+                Employee.update({
+                    manager_id: managerID,
+                }, {
+                    where: {
+                        id: employeeID,
+                    }
+                }).then(() => {
+                    console.log(`Employee ${answers.employee} manager updated successfully`);
+                    //return to the main menu
+                    init();
+                })
+                
+            }
+        })
+    });
 }
 
 //update Employee data function
@@ -279,33 +279,33 @@ const updateEmployeeRole = () =>{
     Employee.findAll().then((employees)=>{
         employees.forEach(employee => {
             employeeArr.push(employee.first_name + ' ' + employee.last_name);
-        })
+            
+        });
+            Role.findAll().then((roles) =>{
+                roles.forEach(role => {
+                    roleArr.push(role.title);
+                });
+                    inquirer.prompt(updateEmployeeQuestions(employeeArr, roleArr)).then((answers) =>{
+                        //role ID and employee ID used for the update
+                        const roleID = roleArr.indexOf(answers.role) +1;
+                        const employeeID = employeeArr.indexOf(answers.employee) +1;
+                        
+                        Employee.update({
+                            role_id: roleID,
+                        }, {
+                            where: {
+                                id: employeeID,
+                            },
+                        }).then(() => {
+                            console.log(`Employee ${answers.employee} role updated successfully`);
+                            //return to the main menu
+                            init();
+                        })
+                    })
+                })
     });
-
-    Role.findAll().then((roles) =>{
-        roles.forEach(role => {
-            roleArr.push(role.title);
-        })
-    })
-    inquirer.prompt(updateEmployeeQuestions(employeeArr, roleArr)).then((answers) =>{
-        //role ID and employee ID used for the update
-        const roleID = roleArr.indexOf(answers.role) +1;
-        const employeeID = employeeArr.indexOf(answers.employee) +1;
-
-        Employee.update({
-            role_id: roleID,
-        }, {
-            where: {
-                id: employeeID,
-            },
-        }).then(() => {
-            console.log(`Employee ${answers.employee} role updated successfully`);
-            //return to the main menu
-            init();
-        })
-    })
-
-    
+            
+            
 
 }
 

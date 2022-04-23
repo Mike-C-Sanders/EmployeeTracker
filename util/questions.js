@@ -108,7 +108,7 @@ const updateEmployeeQuestions = (employeeArr, roleArr) =>{
             choices: employeeArr,
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'role',
             message: `What's the employee's new role?`,
             choices: roleArr,
