@@ -24,9 +24,9 @@ Be sure to download Nodejs & install MySQL as well. You can find details on down
 
 ## Usage
 
-![GIF]()
+![GIF](./gif/usage.gif)
 
-For the whole vide follow this link: [YouTube]()
+For the whole vide follow this link: [YouTube](https://youtu.be/rREtaYCCvx0)
 
 ## Contribute
 
